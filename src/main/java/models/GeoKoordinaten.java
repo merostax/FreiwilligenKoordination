@@ -1,8 +1,7 @@
 package models;
 
-public class GeoKoordinaten {
-    private double latitude;
-    private double longitude;
+import interfaces.ILocation;
 
+public class GeoKoordinaten implements ILocation {
 
 }

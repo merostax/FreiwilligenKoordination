@@ -1,0 +1,25 @@
+@startuml
+'Logik'
+class Koordination {
+  + match(Hilfsgesuch, List<Hilfsangebot>): List<Zuordnung>
+  + sendeBestätigung(Zuordnung):String
+  + aktualisiereVorOrt(Hilfsgesuch):void
+
+}
+class Hverwalten{
++ sendeAblehnung(Zuordnung):String
+}
+
+class Zuordnung {
+  - hilfsgesuch: Hilfsgesuch
+  - hilfsangebot: Hilfsangebot
+}
+
+
+
+Koordination --> Zuordnung
+Hverwalten --> Zuordnung
+Zuordnung --> Hilfsangebot
+Zuordnung --> Hilfsgesuch
+
+@enduml

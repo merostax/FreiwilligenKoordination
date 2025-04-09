@@ -1,5 +1,10 @@
 package interfaces;
 
+import models.GeoKoordinaten;
+
+import java.util.List;
+
 public interface ILocation {
-    String getBeschreibung();
+       double latitude = 0;
+     double longitude=0;
 }

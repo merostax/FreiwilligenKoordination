@@ -4,5 +4,5 @@ public enum FreiwilligenStatus {
     VERFÜGBAR,
     ZUGEWIESEN,
     VOR_ORT,
-    ABGESCHLOSSEN
+    NICHT_VERFÜGBAR
 }

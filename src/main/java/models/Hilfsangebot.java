@@ -13,7 +13,6 @@ import java.util.UUID;
 @Getter
 @Setter
 @ToString
-@EqualsAndHashCode
 @AllArgsConstructor
 
 public class Hilfsangebot {
@@ -27,6 +26,5 @@ public class Hilfsangebot {
     private List<Ausrüstung> ausrüstung;
     private FreiwilligenStatus status = FreiwilligenStatus.VERFÜGBAR;
     private Hilfsgesuch zugewiesenesGesuch;
-
 
 }
