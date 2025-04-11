@@ -130,22 +130,23 @@ class Benachrichtigung {
     - empfänger: Freiwilliger
     - zeitpunkt: DateTime
 }
-'Inheritance'
+'Inherit
 GeoKoordinaten ..|> ILocation
 Freiwilliger ..|> Person
 EinsatzLeiter ..|> Person
 
-'Associations'
 Organisation "1" *-- "1..*" EinsatzLeiter : verwaltet >
 Hilfsgesuch "1" o-- "1" Organisation : erstelltVon >
 Hilfsgesuch "1" *-- "1" GeoKoordinaten : betrifft >
 Hilfsgesuch "1" *-- "1..*" Einsatzschicht : plant >
 Freiwilliger "1" --> "0..*" Hilfsangebot : bietet >
-Hilfsangebot "1" *-- "1..*" GeoKoordinaten : beziehtSichAuf >
+Hilfsangebot "1" *-- "1..*" GeoKoordinaten : : beziehtSichAufEinsatzorte >
 Hilfsangebot --> "0..*" Einsatzschicht : verfügbarIn >
 
 KoordinationsService --> Hilfsangebot
 KoordinationsService --> Hilfsgesuch
+KoordinationsService --> Freiwilliger : verwaltet >
+
 KoordinationsService --> Benachrichtigung
 Benachrichtigung --> Freiwilliger : empfänger >
 
