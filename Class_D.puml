@@ -1,0 +1,152 @@
+@startuml
+
+'Enums'
+enum Fähigkeit {
+    ERSTE_HILFE
+    TECHNISCHE_HILFE
+    SPRACHKENNTNISSE
+    FAHRKÜNFTE
+}
+enum Ausrüstung {
+    FAHRZEUG
+    WERKZEUGE
+    GENERATOR
+    SANITÄTSKIT
+}
+enum FreiwilligenStatus {
+    VERFÜGBAR
+    ZUGEWIESEN
+    VOR_ORT
+    NICHT_VERFÜGBAR
+}
+enum Unterstützungsaktivität {
+    SANITÄTSDIENST
+    NAHRUNGSVERSORGUNG
+    TRANSPORT
+    EVAKUIERUNG
+    KOMMUNIKATION
+}
+
+'Interfaces'
+interface Person {
+    + getName(): String
+    + getAdresse(): String
+}
+interface ILocation {
+    + getLatitude(): Double
+    + getLongitude(): Double
+    + getPositionBeschreibung(): String
+}
+
+'Classes'
+class Organisation {
+    - name: String
+    - einsatzLeiter: List<EinsatzLeiter>
+}
+
+class EinsatzLeiter {
+    - kontaktDaten: String
+}
+
+class GeoKoordinaten {
+    - latitude: Double
+    - longitude: Double
+    + getPositionBeschreibung(): String
+}
+note right of GeoKoordinaten
+OCL:
+context GeoKoordinaten
+inv GültigeKoordinaten:
+  self.latitude >= -90 and self.latitude <= 90 and
+  self.longitude >= -180 and self.longitude <= 180
+end note
+
+class Hilfsgesuch {
+    - id: UUID
+    - aktivitäten: List<Unterstützungsaktivität>
+    - einsatzgebiet: GeoKoordinaten
+    - schichten: List<Einsatzschicht>
+    - fähigkeiten: List<Fähigkeit>
+    - ausrüstung: List<Ausrüstung>
+    - benötigteHelfer: int
+
+
+    }
+note right of Hilfsgesuch
+OCL:
+context Hilfsgesuch
+inv HatAktivitäten:
+  self.aktivitäten->notEmpty()
+inv MindestensEinHelfer:
+  self.benötigteHelfer > 0
+end note
+
+class Einsatzschicht {
+    - startschicht: DateTime
+    - endeschicht: DateTime
+    - helferProSchicht: int
+}
+note right of Einsatzschicht
+OCL:
+context Einsatzschicht
+inv GültigerZeitraum:
+  self.startschicht < self.endeschicht
+end note
+
+class Freiwilliger {
+    - fähigkeiten: List<Fähigkeit>
+    - ausrüstung: List<Ausrüstung>
+    - verfügbarkeit: FreiwilligenStatus
+    + bietetAn(angebot: Hilfsangebot): void
+
+}
+note right of Freiwilliger
+OCL:
+context Freiwilliger
+inv MindestensEineFähigkeit:
+  self.fähigkeiten->size() >= 1
+end note
+
+class Hilfsangebot {
+    - id: UUID
+    - freiwilliger: Freiwilliger
+    - ausgewählteOrte: List<GeoKoordinaten>
+    - verfügbareSchichten: List<Einsatzschicht>
+    - aktivitäten: List<Unterstützungsaktivität>
+    - verfügbarVon: LocalDateTime
+    - verfügbarBis: LocalDateTime
+    - istQuittiert: Boolean
+    - ankunftszeit: LocalDateTime
+}
+class KoordinationsService {
+    + matchAngeboteMitGesuche(): void
+    + bestätigeAnkunft(f: Freiwilliger, ort: GeoKoordinaten): void
+    + versendeBenachrichtigung(n: Benachrichtigung): void
+    + aktualisiereGesuch(g: Hilfsgesuch): void
+}
+
+class Benachrichtigung {
+    - text: String
+    - empfänger: Freiwilliger
+    - zeitpunkt: DateTime
+}
+'Inheritance'
+GeoKoordinaten ..|> ILocation
+Freiwilliger ..|> Person
+EinsatzLeiter ..|> Person
+
+'Associations'
+Organisation "1" *-- "1..*" EinsatzLeiter : verwaltet >
+Hilfsgesuch "1" o-- "1" Organisation : erstelltVon >
+Hilfsgesuch "1" *-- "1" GeoKoordinaten : betrifft >
+Hilfsgesuch "1" *-- "1..*" Einsatzschicht : plant >
+Freiwilliger "1" --> "0..*" Hilfsangebot : bietet >
+Hilfsangebot "1" *-- "1..*" GeoKoordinaten : beziehtSichAuf >
+Hilfsangebot --> "0..*" Einsatzschicht : verfügbarIn >
+
+KoordinationsService --> Hilfsangebot
+KoordinationsService --> Hilfsgesuch
+KoordinationsService --> Benachrichtigung
+Benachrichtigung --> Freiwilliger : empfänger >
+
+@enduml

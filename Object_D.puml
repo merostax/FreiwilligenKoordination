@@ -1,0 +1,76 @@
+@startuml
+
+object Organisation {
+  name = "ostfalia_WF"
+}
+
+object EinsatzLeiter {
+  kontaktDaten = "k@ostfalia.de"
+}
+
+object Hilfsgesuch {
+   id = "62a8d677-cb8e-4ee2-8aa4-796f8fefcdd9"
+   aktivitäten = [SANITÄTSDIENST, TRANSPORT]
+   fähigkeiten = [ERSTE_HILFE]
+   ausrüstung = [FAHRZEUG, SANITÄTSKIT]
+   benötigteHelfer = 4
+
+}
+
+object GeoKoordinaten {
+  latitude = 53
+  longitude = 9.99
+}
+
+object Einsatzschicht1 {
+  startschicht = "2024-04-12T08:00"
+  endeschicht = "2024-04-12T16:00"
+  helferProSchicht = 2
+}
+object Einsatzschicht2 {
+  startschicht = "2024-04-12T12:00"
+  endeschicht = "2024-04-12T16:00"
+  helferProSchicht = 2
+}
+object Freiwilliger1 {
+  name = "K.Mbappe"
+  adresse = "Salzdahlumer Str. 46/48, 38302 Wolfenbüttel"
+ fähigkeiten = [ERSTE_HILFE]
+  ausrüstung = [SANITÄTSKIT
+  verfügbarkeit = VERFÜGBAR
+}
+object Freiwilliger2 {
+  name = "N.Jünior"
+  adresse = "Salzdahlumer Str. 46/48, 38302 Wolfenbüttel"
+  fähigkeiten = [FAHRKÜNFTE]
+  ausrüstung = [FAHRZEUG]
+  verfügbarkeit = VERFÜGBAR
+}
+object Hilfsangebot1 {
+  id = "3dc895ee-0236-4b4d-b0b2-8f1817622e81"
+  verfügbarVon = "2024-04-12T07:30"
+  verfügbarBis = "2024-04-12T17:00"
+  aktivitäten = [SANITÄTSDIENST]
+  istQuittiert = false
+}
+object Hilfsangebot2 {
+  id = "3dc895ee-0236-4b4d-b0b2-8f1817622e82"
+  verfügbarVon = "2024-04-12T11:30"
+  verfügbarBis = "2024-04-12T17:00"
+  aktivitäten = [TRANSPORT]
+  istQuittiert = false
+}
+Organisation -- EinsatzLeiter : verwaltet
+Hilfsgesuch -- Organisation : erstelltVon
+Hilfsgesuch -- GeoKoordinaten : betrifft
+Hilfsgesuch -- Einsatzschicht1 : plant
+Hilfsgesuch -- Einsatzschicht2 : plant
+
+Freiwilliger1 -- Hilfsangebot1 : bietet
+Hilfsangebot1 -- GeoKoordinaten : beziehtSichAuf
+Hilfsangebot1 -- Einsatzschicht1 : verfügbarIn
+
+Freiwilliger2 -- Hilfsangebot2 : bietet
+Hilfsangebot2 -- GeoKoordinaten : beziehtSichAuf
+Hilfsangebot2 -- Einsatzschicht2 : verfügbarIn
+@enduml
